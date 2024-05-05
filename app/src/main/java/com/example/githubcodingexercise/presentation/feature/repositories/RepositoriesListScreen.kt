@@ -17,18 +17,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Refresh
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -42,8 +38,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -90,7 +88,7 @@ private fun RepositoriesListScreen(
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.Delete,
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete_fill0_wght400_grad0_opsz24),
                             contentDescription = stringResource(R.string.delete_data_button_content_description)
                         )
                     }
@@ -113,7 +111,7 @@ private fun RepositoriesListScreen(
                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Refresh,
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_refresh_fill0_wght400_grad0_opsz24),
                     contentDescription = stringResource(R.string.refresh_fab_content_description)
                 )
             }
@@ -183,7 +181,7 @@ private fun RepositoryListItem(
     rank: Int,
     repo: GitHubRepo
 ) {
-    ElevatedCard(
+    OutlinedCard(
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -204,7 +202,7 @@ private fun RepositoryListItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Rounded.Star,
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_star_fill0_wght400_grad0_opsz20),
                         contentDescription = null,
                         modifier = Modifier
                             .size(20.dp)
