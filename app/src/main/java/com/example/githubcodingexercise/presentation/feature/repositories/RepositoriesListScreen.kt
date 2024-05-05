@@ -235,7 +235,7 @@ private fun RepositoryListItem(
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        text = stringResource(id = R.string.top_contributor_commits_concat, topContributor.contributions),
+                        text = stringResource(id = R.string.top_contributor_contributions_concat, topContributor.contributions),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }

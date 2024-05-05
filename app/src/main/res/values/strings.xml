@@ -6,7 +6,7 @@
     <string name="repository_list_title">GitHub Top 100 Starred</string>
     <string name="repository_top_contributor_title">Top contributor</string>
     <string name="top_contributor_name_concat">Name: %s</string>
-    <string name="top_contributor_commits_concat">Commits: %s</string>
+    <string name="top_contributor_contributions_concat">Contributions: %s</string>
 
     <!-- Content Descriptions -->
     <string name="delete_data_button_content_description">Delete Data Button</string>
