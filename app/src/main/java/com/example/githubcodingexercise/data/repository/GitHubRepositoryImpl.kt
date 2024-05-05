@@ -57,6 +57,13 @@ class GitHubRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteData() {
+        withContext(Dispatchers.IO) {
+            gitHubRepoDao.deleteAll()
+            contributorDao.deleteAll()
+        }
+    }
+
     companion object {
         // TODO provide "token <oauth_token>"
         private const val AUTHORIZATION_HEADER = ""

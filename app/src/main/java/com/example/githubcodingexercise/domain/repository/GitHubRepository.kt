@@ -7,4 +7,5 @@ interface GitHubRepository {
     fun getTopReposWithContributors(): Flow<List<GitHubRepo>>
     suspend fun refreshTopRepositories()
     suspend fun refreshTopContributors()
+    suspend fun deleteData()
 }

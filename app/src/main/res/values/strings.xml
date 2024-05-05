@@ -9,5 +9,6 @@
     <string name="top_contributor_commits_concat">Commits: %s</string>
 
     <!-- Content Descriptions -->
+    <string name="delete_data_button_content_description">Delete Data Button</string>
     <string name="refresh_fab_content_description">Refresh Floating Action Button</string>
 </resources>

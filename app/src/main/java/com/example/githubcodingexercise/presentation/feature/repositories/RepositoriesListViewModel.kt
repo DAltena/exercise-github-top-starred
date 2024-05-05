@@ -37,7 +37,7 @@ class RepositoriesListViewModel @Inject constructor(
     fun onAction(action: RepositoriesListAction) {
         when (action) {
             RepositoriesListAction.OnRefreshDataClick -> refreshData()
-            else -> {}
+            RepositoriesListAction.OnDeleteDataClick -> deleteData()
         }
     }
 
@@ -47,6 +47,12 @@ class RepositoriesListViewModel @Inject constructor(
             gitHubRepository.refreshTopRepositories()
             gitHubRepository.refreshTopContributors()
             isLoading.emit(false)
+        }
+    }
+
+    private fun deleteData() {
+        viewModelScope.launch {
+            gitHubRepository.deleteData()
         }
     }
 }
