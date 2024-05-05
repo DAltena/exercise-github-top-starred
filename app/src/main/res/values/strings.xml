@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">GitHub Top Repositories</string>
+    <string name="repositories_empty_title">No results to display at this time.</string>
+    <string name="repositories_empty_description">Try refreshing data using the FAB below.</string>
+
+    <string name="repository_list_title">GitHub Top 100 Starred</string>
+    <string name="repository_top_contributor_title">Top contributor</string>
+    <string name="top_contributor_name_concat">Name: %s</string>
+    <string name="top_contributor_commits_concat">Commits: %s</string>
+
+    <!-- Content Descriptions -->
+    <string name="refresh_fab_content_description">Refresh Floating Action Button</string>
+</resources>
