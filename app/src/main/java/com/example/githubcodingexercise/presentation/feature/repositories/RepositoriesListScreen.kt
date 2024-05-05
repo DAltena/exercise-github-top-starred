@@ -264,19 +264,19 @@ private fun DeleteDataDialog(
                 onConfirm()
                 onDismiss()
             }) {
-                Text(text = "Confirm")
+                Text(text = stringResource(R.string.global_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = "Cancel")
+                Text(text = stringResource(R.string.global_cancel))
             }
         },
         title = {
-            Text(text = "Delete Data")
+            Text(text = stringResource(R.string.delete_data_dialog_title))
         },
         text = {
-            Text(text = "Are you sure you want to delete all data?")
+            Text(text = stringResource(R.string.delete_data_dialog_description))
         }
     )
 }
