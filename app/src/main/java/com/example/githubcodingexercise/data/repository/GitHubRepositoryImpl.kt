@@ -5,6 +5,7 @@ import com.example.githubcodingexercise.data.database.dao.GitHubRepoDao
 import com.example.githubcodingexercise.data.database.model.GitHubRepoAndTopContributor
 import com.example.githubcodingexercise.data.database.model.toGitHubRepoDomainModel
 import com.example.githubcodingexercise.data.network.client.GitHubClient
+import com.example.githubcodingexercise.data.network.model.Contributor
 import com.example.githubcodingexercise.data.network.model.asDbEntities
 import com.example.githubcodingexercise.data.network.model.asDbEntity
 import com.example.githubcodingexercise.domain.repository.GitHubRepository
@@ -42,35 +43,32 @@ class GitHubRepositoryImpl @Inject constructor(
             gitHubRepoDao.getTopRepos().forEach { repo ->
                 deferredOperations.add(
                     async {
+                        var keepSearching = true
                         var currentPage = 1
                         var numberOfContributors = 0
-                        var keepSearching = true
+                        val topContributors: MutableList<Contributor> = mutableListOf()
 
-                        while (keepSearching) {
+                        while (keepSearching && currentPage <= 3) {
                             val topContributorResult = gitHubClient.getTopContributorForRepository(
                                 token = AUTHORIZATION_HEADER,
                                 owner = repo.ownerName,
                                 repo = repo.name,
-                                perPage = 100,
+                                perPage = 1,
                                 page = currentPage
                             )
                             if (topContributorResult.isSuccessful) {
-                                topContributorResult.body()?.let { contributors ->
-                                    if (currentPage == 1) {
-                                        contributorDao.insertTopContributors(
-                                            contributors.take(if (contributors.size >= 3) 3 else contributors.size)
-                                                .map { it.asDbEntity(repoId = repo.id) })
-                                    }
-                                    numberOfContributors += contributors.size
-                                    if (contributors.size < 100) {
-                                        keepSearching = false
-                                    }
-                                    currentPage += 1
+                                // TODO reference here in how to possibly get total count, though comments imply it may not work properly: https://stackoverflow.com/questions/44347339/github-api-how-efficiently-get-the-total-contributors-amount-per-repository
+                                topContributorResult.body()?.firstOrNull()?.let {
+                                   topContributors.add(it)
+                                } ?: run {
+                                    keepSearching = false
                                 }
                             } else {
                                 keepSearching = false
                             }
+                            currentPage += 1
                         }
+                        contributorDao.insertTopContributors(topContributors.map { it.asDbEntity(repoId = repo.id) })
                         gitHubRepoDao.updateRepoContributorCount(repoId = repo.id, contributorCount = numberOfContributors)
                     }
                 )
