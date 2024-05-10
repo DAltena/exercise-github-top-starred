@@ -44,29 +44,28 @@ class GitHubRepositoryImpl @Inject constructor(
                     async {
                         var currentPage = 1
                         var numberOfContributors = 0
-                        val topContributorResult = gitHubClient.getTopContributorForRepository(token = AUTHORIZATION_HEADER, owner = repo.ownerName, repo = repo.name, perPage = 100, page = currentPage)
-                        if (topContributorResult.isSuccessful) {
-                            topContributorResult.body()?.let { contributors ->
-                                contributorDao.insertTopContributors(contributors.take(if (contributors.size >= 3) 3 else contributors.size).map { it.asDbEntity(repoId = repo.id) })
-                                if (contributors.size < 100) {
-                                    gitHubRepoDao.updateRepoContributorCount(repoId = repo.id, contributorCount = contributors.size)
-                                    return@async
-                                }
-                                numberOfContributors += contributors.size
-                            }
-                        }
-
                         var keepSearching = true
-                        while (keepSearching) {
-                            currentPage += 1
-                            val nextContributorResult = gitHubClient.getTopContributorForRepository(token = AUTHORIZATION_HEADER, owner = repo.ownerName, repo = repo.name, perPage = 100, page = currentPage)
 
-                            if (nextContributorResult.isSuccessful) {
-                                nextContributorResult.body()?.let {
-                                    numberOfContributors += it.size
-                                    if (it.size < 100) {
+                        while (keepSearching) {
+                            val topContributorResult = gitHubClient.getTopContributorForRepository(
+                                token = AUTHORIZATION_HEADER,
+                                owner = repo.ownerName,
+                                repo = repo.name,
+                                perPage = 100,
+                                page = currentPage
+                            )
+                            if (topContributorResult.isSuccessful) {
+                                topContributorResult.body()?.let { contributors ->
+                                    if (currentPage == 1) {
+                                        contributorDao.insertTopContributors(
+                                            contributors.take(if (contributors.size >= 3) 3 else contributors.size)
+                                                .map { it.asDbEntity(repoId = repo.id) })
+                                    }
+                                    numberOfContributors += contributors.size
+                                    if (contributors.size < 100) {
                                         keepSearching = false
                                     }
+                                    currentPage += 1
                                 }
                             } else {
                                 keepSearching = false
