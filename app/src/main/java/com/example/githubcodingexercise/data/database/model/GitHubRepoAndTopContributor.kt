@@ -14,7 +14,7 @@ data class GitHubRepoAndTopContributor(
         parentColumn = "id",
         entityColumn = "repoId"
     )
-    val contributor: ContributorEntity?
+    val contributors: List<ContributorEntity>?
 )
 
 fun GitHubRepoAndTopContributor.toGitHubRepoDomainModel() = GitHubRepo(
@@ -22,5 +22,6 @@ fun GitHubRepoAndTopContributor.toGitHubRepoDomainModel() = GitHubRepo(
     name = gitHubRepoEntity.name,
     url = gitHubRepoEntity.url,
     starCount = gitHubRepoEntity.starCount,
-    topContributor = contributor?.asDomainModel()
+    topContributors = contributors?.map { it.asDomainModel() },
+    contributorCount = gitHubRepoEntity.contributorCount
 )

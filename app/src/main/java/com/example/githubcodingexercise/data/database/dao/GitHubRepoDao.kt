@@ -19,6 +19,9 @@ interface GitHubRepoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTopRepos(topicEntities: List<GitHubRepoEntity>)
 
+    @Query("UPDATE top_repositories SET contributorCount=:contributorCount WHERE id=:repoId")
+    suspend fun updateRepoContributorCount(repoId: Int, contributorCount: Int)
+
     @Query("DELETE FROM top_repositories")
     suspend fun deleteAll()
 }

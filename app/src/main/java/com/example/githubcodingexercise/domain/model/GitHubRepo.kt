@@ -5,5 +5,6 @@ data class GitHubRepo(
     val name: String,
     val url: String,
     val starCount: Int,
-    val topContributor: Contributor? = null
+    val topContributors: List<Contributor>? = null,
+    val contributorCount: Int
 )

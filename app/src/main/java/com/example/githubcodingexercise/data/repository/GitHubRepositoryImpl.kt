@@ -42,14 +42,37 @@ class GitHubRepositoryImpl @Inject constructor(
             gitHubRepoDao.getTopRepos().forEach { repo ->
                 deferredOperations.add(
                     async {
-                        val topContributorResult = gitHubClient.getTopContributorForRepository(token = AUTHORIZATION_HEADER, owner = repo.ownerName, repo = repo.name)
+                        var currentPage = 1
+                        var numberOfContributors = 0
+                        val topContributorResult = gitHubClient.getTopContributorForRepository(token = AUTHORIZATION_HEADER, owner = repo.ownerName, repo = repo.name, perPage = 100, page = currentPage)
                         if (topContributorResult.isSuccessful) {
-                            topContributorResult.body()?.firstOrNull()?.let { contributor ->
-                                contributorDao.insertTopContributor(
-                                    contributor.asDbEntity(repo.id)
-                                )
+                            topContributorResult.body()?.let { contributors ->
+                                contributorDao.insertTopContributors(contributors.take(if (contributors.size >= 3) 3 else contributors.size).map { it.asDbEntity(repoId = repo.id) })
+                                if (contributors.size < 100) {
+                                    gitHubRepoDao.updateRepoContributorCount(repoId = repo.id, contributorCount = contributors.size)
+                                    return@async
+                                }
+                                numberOfContributors += contributors.size
                             }
                         }
+
+                        var keepSearching = true
+                        while (keepSearching) {
+                            currentPage += 1
+                            val nextContributorResult = gitHubClient.getTopContributorForRepository(token = AUTHORIZATION_HEADER, owner = repo.ownerName, repo = repo.name, perPage = 100, page = currentPage)
+
+                            if (nextContributorResult.isSuccessful) {
+                                nextContributorResult.body()?.let {
+                                    numberOfContributors += it.size
+                                    if (it.size < 100) {
+                                        keepSearching = false
+                                    }
+                                }
+                            } else {
+                                keepSearching = false
+                            }
+                        }
+                        gitHubRepoDao.updateRepoContributorCount(repoId = repo.id, contributorCount = numberOfContributors)
                     }
                 )
             }

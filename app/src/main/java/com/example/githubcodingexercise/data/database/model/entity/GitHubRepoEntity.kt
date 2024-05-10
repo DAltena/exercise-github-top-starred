@@ -12,5 +12,6 @@ data class GitHubRepoEntity(
     val name: String,
     val url: String,
     val starCount: Int,
-    val ownerName: String
+    val ownerName: String,
+    val contributorCount: Int
 )

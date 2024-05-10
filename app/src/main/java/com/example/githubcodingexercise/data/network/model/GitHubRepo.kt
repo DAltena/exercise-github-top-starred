@@ -28,6 +28,7 @@ fun List<GitHubRepo>.asDbEntities() =
             name = gitHubRepo.name,
             url = gitHubRepo.url,
             starCount = gitHubRepo.starCount,
-            ownerName = gitHubRepo.owner.name
+            ownerName = gitHubRepo.owner.name,
+            contributorCount = 0
         )
     }

@@ -8,7 +8,9 @@
     <string name="repositories_empty_title">No results to display at this time.</string>
     <string name="repositories_empty_description">Try refreshing data using the FAB below.</string>
     <string name="repository_list_title">GitHub Top 100 Starred</string>
-    <string name="repository_top_contributor_title">Top contributor</string>
+    <string name="repository_number_of_contributors_title">Number of contributors</string>
+    <string name="repository_top_contributors_title">Top contributors</string>
+    <string name="repository_top_contributors_tap_to_display">Tap to display</string>
     <string name="top_contributor_name_concat">Name: %s</string>
     <string name="top_contributor_contributions_concat">Contributions: %s</string>
     <string name="delete_data_dialog_title">Delete Data</string>

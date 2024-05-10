@@ -2,6 +2,8 @@
 
 package com.example.githubcodingexercise.presentation.feature.repositories
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +44,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -181,8 +184,13 @@ private fun RepositoryListItem(
     rank: Int,
     repo: GitHubRepo
 ) {
+    var topContributorsVisible by rememberSaveable { mutableStateOf(false) }
+
     OutlinedCard(
         modifier = Modifier
+            .clickable {
+                topContributorsVisible = !topContributorsVisible
+            }
             .fillMaxWidth()
     ) {
         Row(
@@ -216,13 +224,13 @@ private fun RepositoryListItem(
                         style = MaterialTheme.typography.titleSmall
                     )
                 }
-                repo.topContributor?.let { topContributor ->
+                if (repo.contributorCount > 0) {
                     Spacer(
                         modifier = Modifier
                             .height(12.dp)
                     )
                     Text(
-                        text = stringResource(R.string.repository_top_contributor_title),
+                        text = stringResource(R.string.repository_number_of_contributors_title),
                         textDecoration = TextDecoration.Underline,
                         style = MaterialTheme.typography.labelMedium
                     )
@@ -231,13 +239,46 @@ private fun RepositoryListItem(
                             .height(4.dp)
                     )
                     Text(
-                        text = stringResource(id = R.string.top_contributor_name_concat, topContributor.login),
+                        text = repo.contributorCount.toString(),
                         style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                repo.topContributors?.let { topContributors ->
+                    Spacer(
+                        modifier = Modifier
+                            .height(12.dp)
                     )
                     Text(
-                        text = stringResource(id = R.string.top_contributor_contributions_concat, topContributor.contributions),
-                        style = MaterialTheme.typography.bodyMedium
+                        text = stringResource(R.string.repository_top_contributors_title),
+                        textDecoration = TextDecoration.Underline,
+                        style = MaterialTheme.typography.labelMedium
                     )
+                    AnimatedVisibility(visible = !topContributorsVisible) {
+                        Text(
+                            text = stringResource(id = R.string.repository_top_contributors_tap_to_display),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    AnimatedVisibility(visible = topContributorsVisible) {
+                        Column {
+                            topContributors.forEach {
+                                Spacer(
+                                    modifier = Modifier
+                                        .height(4.dp)
+                                )
+                                Text(
+                                    text = stringResource(id = R.string.top_contributor_name_concat, it.login),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Text(
+                                    text = stringResource(id = R.string.top_contributor_contributions_concat, it.contributions),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
                 }
             }
             Spacer(
